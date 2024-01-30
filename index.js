@@ -12,6 +12,7 @@ let timeToNextRaven = 0;
 let lastTime = 0;
 let ravenInterval = 500;
 let score = 0;
+let gameOver=false;
 
 ctx.font = "50px Impact";
 
@@ -66,6 +67,9 @@ class Raven {
       } else {
         this.frame++;
       }
+    }
+    if(this.x<-this.width){
+        gameOver=true;
     }
   }
   draw() {
@@ -127,6 +131,14 @@ const drawScore = () => {
   ctx.fillText("Score:" + score, 55, 80);
 };
 
+const drawGameOver=()=>{
+    ctx.textAlign="center";
+    ctx.fillStyle="black";
+    ctx.fillText("GAME OVER,your score is"+score,canvas.width*0.5,canvas.height*0.5);
+    ctx.fillStyle="white";
+    ctx.fillText("GAME OVER,your score is"+score,canvas.width*0.5+5,canvas.height*0.5+5);
+}
+
 window.addEventListener("click", (event) => {
   const detectPixelColor = collisionCtx.getImageData(event.x, event.y, 1, 1);
   const clr = detectPixelColor.data;
@@ -166,6 +178,12 @@ const animate = (timeStamp) => {
   });
   ravens = ravens.filter((obj) => !obj.markedForDelection);
   explosions=explosions.filter((obj)=>!obj.markedForDelection);
-  requestAnimationFrame(animate);
+  if(!gameOver){
+    requestAnimationFrame(animate);
+  }
+  else{
+    drawGameOver();
+  }
+  
 };
 animate(0);
